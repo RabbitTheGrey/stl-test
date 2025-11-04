@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - stl
+  redis:
+    image: redis:latest
+    container_name: stl-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - stl
+  nginx:
+    container_name: stl-nginx
+    image: nginx
+    ports:
+      - "88:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ../:/var/www/html
+    networks:
+      - stl
+  stl-fpm:
+    container_name: stl-fpm
+    build: .
+    volumes:
+      - ../:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./php/fpm-www.conf:/usr/local/etc/php-fpm.d/www.conf
+    depends_on:
+      - db
+    networks:
+      - stl
+    env_file:
+      - ../.env
+
+networks:
+  stl:
+    driver: bridge
