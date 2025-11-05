@@ -11,7 +11,8 @@ Schedule::command('holds:clear')
 
 /**
  * Фоновый прогрев кеша
+ * Уменьшил интервал с 5 минут до минуты, поскольку убрал перепрогрев из обсервера
  */
 Schedule::command('slots:warm')
-    ->everyFiveMinutes()
+    ->everyMinute()
     ->withoutOverlapping();

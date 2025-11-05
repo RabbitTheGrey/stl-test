@@ -5,6 +5,10 @@ namespace App\Observers;
 use App\Models\Slot;
 use App\Service\SlotServiceInterface;
 
+/**
+ * Решил, что обсервер не нужен
+ * Сохранил для истории
+ */
 class SlotObserver
 {
     public function __construct(private readonly SlotServiceInterface $service)
@@ -17,7 +21,7 @@ class SlotObserver
      */
     public function created(Slot $slot): void
     {
-        $this->service->warm();
+        // $this->service->warm();
     }
 
     /**
@@ -25,7 +29,7 @@ class SlotObserver
      */
     public function updated(Slot $slot): void
     {
-        $this->service->warm();
+        // $this->service->warm();
     }
 
     /**
@@ -33,6 +37,6 @@ class SlotObserver
      */
     public function deleted(Slot $slot): void
     {
-        $this->service->warm();
+        // $this->service->warm();
     }
 }
