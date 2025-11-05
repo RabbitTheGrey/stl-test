@@ -13,6 +13,7 @@ use Spatie\RouteAttributes\Attributes\Get;
 use Spatie\RouteAttributes\Attributes\Middleware;
 use Spatie\RouteAttributes\Attributes\Post;
 use Spatie\RouteAttributes\Attributes\Prefix;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 #[Prefix('slots')]
 #[Middleware(['api', 'auth:api'])]
@@ -41,6 +42,10 @@ final class SlotApiController extends Controller
          * @var string $idempotencyKey
          */
         $idempotencyKey = $request->headers->get('Idempotency-Key');
+
+        if (!$idempotencyKey) {
+            throw new BadRequestException('header `Idempotency-Key` not found!');
+        }
 
         $response = $this->slotService->hold($idempotencyKey, $request->user(), $slot);
 
